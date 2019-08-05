@@ -25,7 +25,7 @@ class _DetailPageState extends State<DetailPage> {
   void initState() {
     super.initState();
     initializeDateFormatting();
-    detailDataBloc.getDetailData("creative-journaling-workshop042617");
+    detailDataBloc.getDetailData(widget.slug);
   }
 
   GoogleMapController mapController;
@@ -52,12 +52,12 @@ class _DetailPageState extends State<DetailPage> {
 //            .push(MaterialPageRoute(builder: (context) => DetailOrder())),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(formatDate(litems[index].activityDate)),
-                Radio(value: null, groupValue: null, onChanged: null)
-              ],
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(formatDate(litems[index].activityDate)),
+            Radio(value: null, groupValue: null, onChanged: null)
+          ],
         ),
       );
     }
@@ -66,15 +66,13 @@ class _DetailPageState extends State<DetailPage> {
       return MediaQuery.removePadding(
         removeTop: true,
         context: context,
-        child: ListView.builder(
+        child: litems !=null ?ListView.builder(
             shrinkWrap: true,
-              itemCount: litems.length,
-              itemBuilder: (BuildContext ctxt, int index) =>
-                  buildBody(ctxt, index, litems)),
+            itemCount: litems.length,
+            itemBuilder: (BuildContext ctxt, int index) =>
+                buildBody(ctxt, index, litems)) : Text("Tidak Ada Data"),
       );
     }
-
-
 
     return Scaffold(
       body: StreamBuilder<Object>(
@@ -88,15 +86,6 @@ class _DetailPageState extends State<DetailPage> {
                     markerId: MarkerId('position'),
                     position: LatLng(data.latitude, data.longitude))
               ]);
-
-              List<String> litems = [
-                "Bogowonto",
-                "Gajahwong",
-                "Bengawan",
-                "Mataram",
-                "Progo"
-              ];
-
               return SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -181,11 +170,15 @@ class _DetailPageState extends State<DetailPage> {
                                               Icons.location_on,
                                               color: Colors.grey,
                                             ),
-                                            Text(
-                                              " ${data.detailAddress}",
-                                              style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 15.0,
+                                            Flexible(
+                                              child: Text(
+                                                " ${data.detailAddress}",
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 15.0,
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -200,13 +193,21 @@ class _DetailPageState extends State<DetailPage> {
                                               Icons.date_range,
                                               color: Colors.grey,
                                             ),
-                                            Text(
-                                              " ${formatDate(data.scheduleList[0].activityDate)}",
-                                              style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 15.0,
-                                              ),
-                                            ),
+                                            data.scheduleList != null
+                                                ? Text(
+                                                    " ${formatDate(data.scheduleList[0].activityDate)}",
+                                                    style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 15.0,
+                                                    ),
+                                                  )
+                                                : Text(
+                                                    " Tidak Ada Data Ditampilkan",
+                                                    style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 15.0,
+                                                    ),
+                                                  ),
                                           ],
                                         ),
                                       ),
@@ -219,12 +220,19 @@ class _DetailPageState extends State<DetailPage> {
                                               Icons.timer,
                                               color: Colors.grey,
                                             ),
-                                            Text(
-                                              " ${data.scheduleList[0].duration}",
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 15.0),
-                                            ),
+                                            data.scheduleList != null
+                                                ? Text(
+                                                    " ${data.scheduleList[0].duration}",
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 15.0),
+                                                  )
+                                                : Text(
+                                                    " Tidak ada Data Ditampilkan",
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 15.0),
+                                                  ),
                                           ],
                                         ),
                                       ),
@@ -404,7 +412,8 @@ class _DetailPageState extends State<DetailPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(0.0,8.0,0.0,0.0),
+                            padding:
+                                const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
                             child: Text(
                               "Jadwal Yang Tersedia",
                               style: TextStyle(
@@ -414,9 +423,9 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                             ),
                           ),
-                         Container
-                           (height: 150,
-                             child: listLokasi(data.scheduleList)),
+                          Container(
+                              height: 150,
+                              child: listLokasi(data.scheduleList)),
                         ],
                       ),
                     ),

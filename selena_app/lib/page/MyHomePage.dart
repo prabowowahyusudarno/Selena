@@ -36,14 +36,15 @@ class _MyHomePageState extends State<MyHomePage>
 
   Widget GridLayout(int row, int column, double width, List<Datum> listData) {
     return GridView.builder(
+
         shrinkWrap: true,
         itemCount: listData.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
+          childAspectRatio: (1 / 1.35),
         ),
         itemBuilder: (BuildContext context, int index) {
           return GridTile(
-
             child: InkResponse(
               enableFeedback: true,
               child: _getTiles(listData[index]),
@@ -69,30 +70,38 @@ class _MyHomePageState extends State<MyHomePage>
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    ClipRRect(
-                      borderRadius: new BorderRadius.circular(8.0),
-                      child: Image.network(
-                        data.mainImage.url,
-                      ),
-                    ),
-                    Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          data.name,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: new BorderRadius.circular(8.0),
+                          child: Image.network(
+                            data.mainImage.url,
                           ),
                         ),
-                      ),
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              data.name,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
